@@ -2,13 +2,13 @@
 
 using namespace std;
 
-//¶¨Òå½Úµã
+//å®šä¹‰èŠ‚ç‚¹
 template <class T>
 struct ListNode
 {
-	T _data;	//½ÚµãÊı¾İ
-	ListNode<T>* _next;		//ºóÒ»¸öÎ»ÖÃ
-	ListNode<T>* _prev;		//Ç°Ò»¸öÎ»ÖÃ
+	T _data;	//èŠ‚ç‚¹æ•°æ®
+	ListNode<T>* _next;		//åä¸€ä¸ªä½ç½®
+	ListNode<T>* _prev;		//å‰ä¸€ä¸ªä½ç½®
 	ListNode(const T& val = T())
 		:_data(val)
 		, _next(nullptr)
@@ -16,72 +16,72 @@ struct ListNode
 	{}
 };
 
-//¶¨ÒåListµü´úÆ÷Àà
-//T:±äÁ¿ÀàĞÍ   Ref:ÒıÓÃ   Ptr:Ö¸Õë
+//å®šä¹‰Listè¿­ä»£å™¨ç±»
+//T:å˜é‡ç±»å‹   Ref:å¼•ç”¨   Ptr:æŒ‡é’ˆ
 template<class T,class Ref,class Ptr>
 struct ListIterator{
 	typedef ListNode<T> Node;
 	typedef ListIterator<T, Ref, Ptr> Self;
 
-	//·â×°Ò»¸ö½Úµã
+	//å°è£…ä¸€ä¸ªèŠ‚ç‚¹
 	Node* _node;
 
 	ListIterator(Node* node)
 		:_node(node)
 	{}
 
-	//ÈÃµü´úÆ÷Ö§³Ö½âÒıÓÃ²Ù×÷ ----ÖØÔØ*ÔËËã·û
+	//è®©è¿­ä»£å™¨æ”¯æŒè§£å¼•ç”¨æ“ä½œ ----é‡è½½*è¿ç®—ç¬¦
 	Ref operator*()
 	{
 		return _node->_data;
 	}
 
-	//Ç°ÖÃ++
+	//å‰ç½®++
 	Self& operator++()
 	{
-		//ÒÆ¶¯µ½ÏÂÒ»¸öÔªËØµÄÎ»ÖÃ
+		//ç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ªå…ƒç´ çš„ä½ç½®
 		_node = _node->_next;
 
 		return *this;
 	}
 
-	//ºóÖÃ++
+	//åç½®++
 	Self& operator++(int)
 	{
 		Self res(*this);
-		//ÒÆ¶¯µ½ÏÂÒ»¸öÔªËØµÄÎ»ÖÃ
+		//ç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ªå…ƒç´ çš„ä½ç½®
 		_node = _node->_next;
-		//·µ»ØÎ´ĞŞ¸ÄÖ®Ç°µÄµü´úÆ÷
+		//è¿”å›æœªä¿®æ”¹ä¹‹å‰çš„è¿­ä»£å™¨
 		return res;
 	}
 
-	//Ç°ÖÃ--
+	//å‰ç½®--
 	Self& operator--()
 	{
-		//ÒÆ¶¯µ½ÏÂÒ»¸öÔªËØµÄÎ»ÖÃ
+		//ç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ªå…ƒç´ çš„ä½ç½®
 		_node = _node->_prev;
 
 		return *this;
 	}
 
-	//ºóÖÃ--
+	//åç½®--
 	Self& operator--(int)
 	{
 		Self res(*this);
-		//ÒÆ¶¯µ½ÏÂÒ»¸öÔªËØµÄÎ»ÖÃ
+		//ç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ªå…ƒç´ çš„ä½ç½®
 		_node = _node->_prev;
-		//·µ»ØÎ´ĞŞ¸ÄÖ®Ç°µÄµü´úÆ÷
+		//è¿”å›æœªä¿®æ”¹ä¹‹å‰çš„è¿­ä»£å™¨
 		return res;
 	}  
 
-	//ÖØÔØ!=
+	//é‡è½½!=
 	bool operator!=(Self& lst)
 	{
-		//ÅĞ¶ÏÁ½¸öÊı¾İµÄÎ»ÖÃÊÇ·ñÏàÍ¬
+		//åˆ¤æ–­ä¸¤ä¸ªæ•°æ®çš„ä½ç½®æ˜¯å¦ç›¸åŒ
 		return _node != lst._node;
 	}
 
-	//ÖØÔØ->ÔËËã·û
+	//é‡è½½->è¿ç®—ç¬¦
 	Ptr operator->()
 	{
 		return &_node->_data;
@@ -89,7 +89,7 @@ struct ListIterator{
 
 };
 
-//listÀà-----´ø Í·½áµã µÄ Ë«Ïò Ñ­»· Á´±í
+//listç±»-----å¸¦ å¤´ç»“ç‚¹ çš„ åŒå‘ å¾ªç¯ é“¾è¡¨
 template <class T>
 class List{
 public:
@@ -99,116 +99,122 @@ public:
 
 	iterator begin()
 	{
-		//·â×°µÚÒ»¸ö½Úµã
-		//´´½¨Ò»¸öµü´úÆ÷¶ÔÏó
+		//å°è£…ç¬¬ä¸€ä¸ªèŠ‚ç‚¹
+		//åˆ›å»ºä¸€ä¸ªè¿­ä»£å™¨å¯¹è±¡
 		return iterator(_header->_next);
 	}
 
 	iterator end()
 	{
-		//·â×°Í·½Úµã
-		//´´½¨Ò»¸öµü´úÆ÷¶ÔÏó
+		//å°è£…å¤´èŠ‚ç‚¹
+		//åˆ›å»ºä¸€ä¸ªè¿­ä»£å™¨å¯¹è±¡
 		return iterator(_header);
 	}
 
 	const_iterator begin()const 
 	{
-		//·â×°µÚÒ»¸ö½Úµã
-		//´´½¨Ò»¸öµü´úÆ÷¶ÔÏó
+		//å°è£…ç¬¬ä¸€ä¸ªèŠ‚ç‚¹
+		//åˆ›å»ºä¸€ä¸ªè¿­ä»£å™¨å¯¹è±¡
 		return const_iterator(_header->_next);
 	}
 	
 	const_iterator end()const
 	{
-		//·â×°µÚÒ»¸ö½Úµã
-		//´´½¨Ò»¸öµü´úÆ÷¶ÔÏó
+		//å°è£…ç¬¬ä¸€ä¸ªèŠ‚ç‚¹
+		//åˆ›å»ºä¸€ä¸ªè¿­ä»£å™¨å¯¹è±¡
 		return const_iterator(_header);
 	}
 
-	//Î²²å
+	//å°¾æ’
 	void pushBack(const T& val)
 	{
-		////´´½¨Ò»¸öĞÂµÄ½Úµã
-		//Node* newNode = new Node(val);
-		////ÕÒµ½Î²½Úµã
-		//Node* tail = _header->_prev;
+		//åˆ›å»ºä¸€ä¸ªæ–°çš„èŠ‚ç‚¹
+		Node* newNode = new Node(val);
+		//æ‰¾åˆ°å°¾èŠ‚ç‚¹
+		Node* tail = _header->_prev;
 
-		////²åÈë½Úµã
-		//tail->_next = newNode;
-		//newNode->_prev = tail;
-		//newNode->_next = _header;
-		//_header->_prev = newNode;
+		//æ’å…¥èŠ‚ç‚¹
+		tail->_next = newNode;
+		newNode->_prev = tail;
+		newNode->_next = _header;
+		_header->_prev = newNode;
 
-		insert(end(), val);
+		//è¿™ç§è°ƒç”¨å…¶å®ƒæ¥å£çš„æ“ä½œæ˜¯å¯è¡Œçš„ï¼Œä½†æ˜¯æœ€å¥½é™ä½æ¥å£é—´çš„è€¦åˆåº¦
+		//insert(end(), val);
 	}
 
-	//Í·²å
+	//å¤´æ’
 	void pushFront(const T& val)
 	{
-		/*
-		//´´½¨Ò»¸öĞÂµÄ½Úµã
+		
+		//åˆ›å»ºä¸€ä¸ªæ–°çš„èŠ‚ç‚¹
 		Node* newNode = new Node(val);
-		ÕÒµ½Í·½ÚµãºóÃæµÄµÚÒ»¸ö½Úµã
+		æ‰¾åˆ°å¤´èŠ‚ç‚¹åé¢çš„ç¬¬ä¸€ä¸ªèŠ‚ç‚¹
 		Node* first = _header->_next;
 
-		//²åÈë½Úµã
+		//æ’å…¥èŠ‚ç‚¹
 		newNode->_next = first;
 		first->_prev = newNode;
 		_header->_next = newNode;
 		newNode->_prev = _header;
-		*/
+		
+		//è¿™ç§è°ƒç”¨å…¶å®ƒæ¥å£çš„æ“ä½œæ˜¯å¯è¡Œçš„ï¼Œä½†æ˜¯æœ€å¥½é™ä½æ¥å£é—´çš„è€¦åˆåº¦
 		insert(begin(), val);
 	}
 
-	//Î²É¾
+	//å°¾åˆ 
 	void popBack()
 	{
-		//Node* tail = _header->_prev;	//Î²½Úµã
-		//Node* tail_prev = tail->_prev;	//Î²½ÚµãµÄÇ°Ò»¸ö½Úµã
+		Node* tail = _header->_prev;	//å°¾èŠ‚ç‚¹
+		Node* tail_prev = tail->_prev;	//å°¾èŠ‚ç‚¹çš„å‰ä¸€ä¸ªèŠ‚ç‚¹
 
-		////ÊÍ·ÅÎ²²¿ÔªËØ
-		//delete tail;
+		//é‡Šæ”¾å°¾éƒ¨å…ƒç´ 
+		delete tail;
 
-		////¸üĞÂ
-		//tail_prev->_next = _header;
-		//_header->_prev = tail_prev;
-		erase(--end());
+		//æ›´æ–°
+		tail_prev->_next = _header;
+		header->_prev = tail_prev;
+		
+		//è¿™ç§è°ƒç”¨å…¶å®ƒæ¥å£çš„æ“ä½œæ˜¯å¯è¡Œçš„ï¼Œä½†æ˜¯æœ€å¥½é™ä½æ¥å£é—´çš„è€¦åˆåº¦
+		//erase(--end());
 	}
 
-	//Í·É¾
+	//å¤´åˆ 
 	void popFront()
 	{
-		////ÕÒµ½µÚÒ»¸ö½ÚµãºÍµÚ¶ş¸ö½Úµã
-		//Node* first = _header->_next;
-		//Node* second = first->_next;
+		//æ‰¾åˆ°ç¬¬ä¸€ä¸ªèŠ‚ç‚¹å’Œç¬¬äºŒä¸ªèŠ‚ç‚¹
+		Node* first = _header->_next;
+		Node* second = first->_next;
 
-		////ÊÍ·ÅµÚÒ»¸ö½Úµã
-		//delete first;
+		//é‡Šæ”¾ç¬¬ä¸€ä¸ªèŠ‚ç‚¹
+		delete first;
 
-		////¸üĞÂ
-		//_header->_next = second;
-		//second->_prev = _header;
-		erase(begin());
+		//æ›´æ–°
+		_header->_next = second;
+		second->_prev = _header;
+		
+		//è¿™ç§è°ƒç”¨å…¶å®ƒæ¥å£çš„æ“ä½œæ˜¯å¯è¡Œçš„ï¼Œä½†æ˜¯æœ€å¥½é™ä½æ¥å£é—´çš„è€¦åˆåº¦
+		//erase(begin());
 	}
 
-	//²åÈë
+	//æ’å…¥
 	void insert(iterator pos, const T& val)
 	{
-		//´´½¨Ò»¸öĞÂµÄ½Úµã
+		//åˆ›å»ºä¸€ä¸ªæ–°çš„èŠ‚ç‚¹
 		Node* newNode = new Node(val);
 		Node* cur = pos._node;
 		Node* prev =cur->_prev;
 
-		prev->_next = newNode;		//Õâ¸öÎ»ÖÃ³öÏÖÄÚ´æ·ÃÎÊÔ½½ç
+		prev->_next = newNode;		//è¿™ä¸ªä½ç½®å‡ºç°å†…å­˜è®¿é—®è¶Šç•Œ
 		newNode->_prev = prev;
 		newNode->_next = cur;
 		cur->_prev = newNode;
 	}
 
-	//·µ»ØÉ¾³ıºóµÄÏÂÒ»¸öÎ»ÖÃ
+	//è¿”å›åˆ é™¤åçš„ä¸‹ä¸€ä¸ªä½ç½®
 	iterator erase(iterator& pos)
 	{
-		//²»ÄÜÉ¾³ıÍ·½Úµã£¬Ò²¾ÍÊÇendµü´úÆ÷Ö´ĞĞµÄÎ»ÖÃ
+		//ä¸èƒ½åˆ é™¤å¤´èŠ‚ç‚¹ï¼Œä¹Ÿå°±æ˜¯endè¿­ä»£å™¨æ‰§è¡Œçš„ä½ç½®
 		if (pos != end())
 		{
 			Node* cur = pos._node;
@@ -218,16 +224,16 @@ public:
 			front->_next = rear;
 			rear->_prev = front;
 
-			delete cur;		//ÊÍ·Åµ±Ç°¿Õ¼ä
+			delete cur;		//é‡Šæ”¾å½“å‰ç©ºé—´
 
-			//´´½¨Ö¸ÏòÉ¾³ıµÄ½ÚµãµÄÏÂÒ»¸ö½ÚµãµÄµü´úÆ÷
+			//åˆ›å»ºæŒ‡å‘åˆ é™¤çš„èŠ‚ç‚¹çš„ä¸‹ä¸€ä¸ªèŠ‚ç‚¹çš„è¿­ä»£å™¨
 			return iterator(rear);
 		}
 
 		return pos;
 	}
 
-	//´òÓ¡
+	//æ‰“å°
 	void Print()
 	{
 		Node* it = _header->_next;
@@ -239,21 +245,21 @@ public:
 		cout << endl;
 	}
 
-	//¿ÕµÄ´øÍ·Ë«ÏòÑ­»·Á´±í
+	//ç©ºçš„å¸¦å¤´åŒå‘å¾ªç¯é“¾è¡¨
 	List()
 	{
 		_header = new Node;
 		_header->_next = _header->_prev = _header;
 	}
 
-	//Ç³¿½±´Ö»ÊÇ¸´ÖÆÁËÖ¸Õë£¬»á¶à´ÎÊÍ·Å¿Õ¼äµÄÄÚÈİ£¬
-	//Éî¿½±´
+	//æµ…æ‹·è´åªæ˜¯å¤åˆ¶äº†æŒ‡é’ˆï¼Œä¼šå¤šæ¬¡é‡Šæ”¾ç©ºé—´çš„å†…å®¹ï¼Œ
+	//æ·±æ‹·è´
 	List(const List<T>& lst)
 		:_header(new Node())
 	{
-		_header->_prev = _header->_next=_header;	//ÕâÀïÒòÎªÊèºö£¬Ã»ÓĞ¼Ó×îºóµÄ_header
+		_header->_prev = _header->_next=_header;	//è¿™é‡Œå› ä¸ºç–å¿½ï¼Œæ²¡æœ‰åŠ æœ€åçš„_header
 
-		////´ÓµÚÒ»¸öÓĞĞ§½Úµã¿ªÊ¼²åÈë
+		////ä»ç¬¬ä¸€ä¸ªæœ‰æ•ˆèŠ‚ç‚¹å¼€å§‹æ’å…¥
 		//Node* cur = lst._header->_next;
 		//while (cur != lst._header)
 		//{
@@ -261,12 +267,12 @@ public:
 		//	cur = cur->_next;
 		//}
 		
-		//²åÈëlstÖĞµÄÃ¿¸öÊı¾İ
+		//æ’å…¥lstä¸­çš„æ¯ä¸ªæ•°æ®
 		for (const auto& e : lst)
 			pushBack(e);
 	}
 
-	//Çå¿ÕÊı¾İ
+	//æ¸…ç©ºæ•°æ®
 	void Clear()
 	{
 		Node* cur = _header->_next;
@@ -276,19 +282,19 @@ public:
 			delete cur;
 			cur = next;
 		}
-		//»Ö¸´Ñ­»·½á¹¹
+		//æ¢å¤å¾ªç¯ç»“æ„
 		_header->_next = _header->_prev = _header;
 	}
 
-	////¸³ÖµÔËËã·ûÖØÔØ,´«Í³Ğ´·¨
+	////èµ‹å€¼è¿ç®—ç¬¦é‡è½½,ä¼ ç»Ÿå†™æ³•
 	//List<T>& operator=(const List<T>& lst)
 	//{
 	//	if (this != &lst)
 	//	{
-	//		//Çå¿ÕÊı¾İ
+	//		//æ¸…ç©ºæ•°æ®
 	//		Clear();
 
-	//		//²åÈëlstÖĞµÄÃ¿¸öÊı¾İ
+	//		//æ’å…¥lstä¸­çš„æ¯ä¸ªæ•°æ®
 	//		for (const auto& e : lst)
 	//			pushBack(e);
 
@@ -297,7 +303,7 @@ public:
 	//}
 
 
-	//¸³ÖµÔËËã·ûÖØÔØ,ÏÖ´úĞ´·¨
+	//èµ‹å€¼è¿ç®—ç¬¦é‡è½½,ç°ä»£å†™æ³•
 	List<T>& operator=(List<T> lst)
 	{
 		if (this != &lst)
@@ -307,7 +313,7 @@ public:
 		}
 	}
 
-	//Îö¹¹º¯Êı
+	//ææ„å‡½æ•°
 	~List()
 	{
 		Clear();
@@ -330,7 +336,7 @@ void const_Print(const List<T>& lst)
 	cout << endl;
 }
 
-//·¶Î§for´òÓ¡
+//èŒƒå›´foræ‰“å°
 template<class T>
 void printFor(const List<T>& lst)
 {
@@ -377,7 +383,7 @@ void test()
 //	printFor(lst);
 //}
 
-////Í·²å£¬Î²²å²âÊÔ
+////å¤´æ’ï¼Œå°¾æ’æµ‹è¯•
 //void test()
 //{
 //	List<int> lst;
@@ -433,8 +439,8 @@ void test()
 //	List<int>::iterator it2 = ++lst.begin();
 //	List<int>::iterator it3 = lst.begin()++;
 //	cout << "*it: " << *it << endl;
-//	cout << "Ç°ÖÃ++: " << *it2 << endl;
-//	cout << "ºóÖÃ++: " << *it3 << endl;
+//	cout << "å‰ç½®++: " << *it2 << endl;
+//	cout << "åç½®++: " << *it3 << endl;
 //}
 
 //struct Date{
@@ -464,7 +470,7 @@ void test()
 //		//cout << (*it)._year << " " << (*it)._month << " " << (*it)._day << endl;
 //		cout <<it->_year << " " << it->_month << " " << it->_day << endl;
 //
-//		//ÕâÊÇ->ÔËËã·ûÊ¹ÓÃµÄÍêÕûĞÎÊ½£¬ÉÏÃæµÄĞÎÊ½ÊÇ±àÒëÆ÷ÎªÎÒÃÇ×öµÄÓÅ»¯
+//		//è¿™æ˜¯->è¿ç®—ç¬¦ä½¿ç”¨çš„å®Œæ•´å½¢å¼ï¼Œä¸Šé¢çš„å½¢å¼æ˜¯ç¼–è¯‘å™¨ä¸ºæˆ‘ä»¬åšçš„ä¼˜åŒ–
 //		//cout <<"test  "<< it.operator->()->_year << endl;   
 //		it++;
 //	}
@@ -490,7 +496,7 @@ void test()
 //	cout << endl;
 //}
 
-////²âÊÔ¹¹Ôìº¯Êı£¬Í·²å£¬Î²²å£¬Í·É¾£¬Î²É¾£¬´òÓ¡
+////æµ‹è¯•æ„é€ å‡½æ•°ï¼Œå¤´æ’ï¼Œå°¾æ’ï¼Œå¤´åˆ ï¼Œå°¾åˆ ï¼Œæ‰“å°
 //void test()
 //{
 //	List<int> lst;
