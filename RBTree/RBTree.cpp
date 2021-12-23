@@ -3,22 +3,22 @@
 #include<utility>
 using namespace std;
 
-//ºìºÚÊ÷
+//çº¢é»‘æ ‘
 enum COLOR{
 	BLACK,
 	RED
 };
 
-//½Úµã
+//èŠ‚ç‚¹
 template<class K,class V>
 struct RBNode
 {
 	RBNode<K, V>*  _parent;
 	RBNode<K, V>*  _left;
 	RBNode<K, V>* _right;
-	pair<K, V> _kv;//Êı¾İÎª¼üÖµ¶Ô
+	pair<K, V> _kv;//æ•°æ®ä¸ºé”®å€¼å¯¹
 	COLOR _color;
-	//bool _color;//STLµÄÊµÏÖ
+	//bool _color;//STLçš„å®ç°
 	RBNode(const pair<K, V> kv=pair<K,V>())
 		:_parent(nullptr)
 		, _left(nullptr)
@@ -36,18 +36,19 @@ public:
 	RBTree()
 		:_header(new Node)
 	{
-		//´øÍ·µÄ¿ÕµÄºìºÚÊ÷
+		//å¸¦å¤´çš„ç©ºçš„çº¢é»‘æ ‘
 		_header->_left = _header->_right = _header;
 	}
 	/*
 		parent  
 		         subR
 			  subRL
-		×óĞıºó£º
+		å·¦æ—‹åï¼š
 		         subR
 	   parent
 	        subRL
 	*/
+	//ä»¥parentçš„å³å­©å­ä¸ºè½´è¿›è¡Œå·¦æ—‹
 	void RotateL(Node* parent)
 	{
 		Node* subR = parent->_right;
@@ -57,7 +58,7 @@ public:
 		parent->_right = subRL;
 		if (subRL)
 			subRL->_parent = parent;
-		//ÅĞ¶Ï¸ù
+		//åˆ¤æ–­æ ¹
 		if (parent == _header->_parent)
 		{
 			_header->_parent = subR;
@@ -78,11 +79,12 @@ public:
 			   parent 
 		subL
 		   subLR
-		ÓÒĞıºó£º
+		å³æ—‹åï¼š
 		   subL
 		       parent
 			 subLR
 	*/
+	//ä»¥parentçš„å·¦å­©å­ä¸ºè½´è¿›è¡Œå³æ—‹
 	void RotateR(Node* parent)
 	{
 		Node* subL = parent->_left;
@@ -129,13 +131,13 @@ public:
 
 	bool insert(const pair<K,V>& kv)
 	{
-		//1.ËÑË÷Ê÷µÄ²åÈë
-		//a.¿ÕÊ÷
+		//1.æœç´¢æ ‘çš„æ’å…¥
+		//a.ç©ºæ ‘
 		if (_header->_parent == nullptr)
 		{
-			//´´½¨¸ù½Úµã
+			//åˆ›å»ºæ ¹èŠ‚ç‚¹
 			Node* root = new Node(kv);
-			//¸ù½ÚµãÑÕÉ«ÎªºÚÉ«
+			//æ ¹èŠ‚ç‚¹é¢œè‰²ä¸ºé»‘è‰²
 			root->_color = BLACK;
 
 			_header->_parent = root;
@@ -145,21 +147,21 @@ public:
 			return true;
 		}
 
-		//b.·Ç¿ÕÊ÷
+		//b.éç©ºæ ‘
 		Node* parent = nullptr;
-		//´Ó¸ù½Úµã¿ªÊ¼ËÑË÷
+		//ä»æ ¹èŠ‚ç‚¹å¼€å§‹æœç´¢
 		Node* cur = _header->_parent;
 		while (cur)
 		{
 			parent = cur;
 			if (cur->_kv.first == kv.first)
-				return false;//¼üÖµÖØ¸´£¬²åÈëÊ§°Ü
+				return false;//é”®å€¼é‡å¤ï¼Œæ’å…¥å¤±è´¥
 			else if (cur->_kv.first > kv.first)
 				cur = cur->_left;
 			else
 				cur = cur->_right;
 		}
-		//ĞÂ²åÈë½áµãµÄÑÕÉ«ÎªºìÉ«
+		//æ–°æ’å…¥ç»“ç‚¹çš„é¢œè‰²ä¸ºçº¢è‰²
 		cur = new Node(kv);
 		if (parent->_kv.first > cur->_kv.first)
 			parent->_left = cur;
@@ -167,74 +169,77 @@ public:
 			parent->_right = cur;
 		cur->_parent = parent;
 
-		//2.ĞŞ¸ÄÑÕÉ«»òÕßµ÷Õû½á¹¹£¬ÅĞ¶ÏÊÇ·ñÓĞºìÉ«Á¬ĞøµÄ½Úµã
+		//2.ä¿®æ”¹é¢œè‰²æˆ–è€…è°ƒæ•´ç»“æ„ï¼Œåˆ¤æ–­æ˜¯å¦æœ‰çº¢è‰²è¿ç»­çš„èŠ‚ç‚¹
 		while (cur != _header->_parent && cur->_parent->_color == RED)
 		{
-			//µ±Ç°½Úµã²»Îª¸ù£¬²¢ÇÒµ±Ç°½ÚµãµÄ¸¸½ÚµãÊÇºìÉ«
+			//å½“å‰èŠ‚ç‚¹ä¸ä¸ºæ ¹ï¼Œå¹¶ä¸”å½“å‰èŠ‚ç‚¹çš„çˆ¶èŠ‚ç‚¹æ˜¯çº¢è‰²
 			parent = cur->_parent;
-			Node* gfather = parent->_parent;//¸¸½ÚµãÑÕÉ«ÎªºìÉ«£¬ËµÃ÷¸¸½Úµã²»ÊÇ¸ù½Úµã£¬´æÔÚ×æ¸¸½Úµã
+			Node* gfather = parent->_parent;//çˆ¶èŠ‚ç‚¹é¢œè‰²ä¸ºçº¢è‰²ï¼Œè¯´æ˜çˆ¶èŠ‚ç‚¹ä¸æ˜¯æ ¹èŠ‚ç‚¹ï¼Œå­˜åœ¨ç¥–çˆ¶èŠ‚ç‚¹
 			if (gfather->_left == parent)
 			{
 				Node* uncle = gfather->_right;
-				//uncle½Úµã´æÔÚ£¬²¢ÇÒÑÕÉ«ÊÇºìÉ«µÄ
+				//uncleèŠ‚ç‚¹å­˜åœ¨ï¼Œå¹¶ä¸”é¢œè‰²æ˜¯çº¢è‰²çš„
 				if (uncle && uncle->_color == RED)
 				{
 					parent->_color = uncle->_color = BLACK;
 					gfather->_color = RED;
-					//¼ÌĞø¸üĞÂ
+					//ç»§ç»­æ›´æ–°
 					cur = gfather;
 				}
 				else
 				{
 					//cout << "Rotate---------" << endl;
-					//ÅĞ¶ÏÊÇ·ñÊÇË«ĞıµÄ³¡¾°
+					//åˆ¤æ–­æ˜¯å¦æ˜¯åŒæ—‹çš„åœºæ™¯
 					if (parent->_right == cur)
 					{
-						RotateL(parent);//×óĞı
-						swap(parent, cur);//½»»»parentºÍcurµÄÖ¸Ïò£¬ÍË»¯ÎªÓÒĞıµÄ³¡¾°
+						RotateL(parent);//å·¦æ—‹
+						swap(parent, cur);//äº¤æ¢parentå’Œcurçš„æŒ‡å‘ï¼Œé€€åŒ–ä¸ºå³æ—‹çš„åœºæ™¯
 					}
-					//uncle½Úµã²»´æÔÚ»òÕßuncle½Úµã´æÔÚ£¬µ«ÊÇÑÕÉ«ÎªºÚÉ«
-					RotateR(gfather);//ÓÒĞı----×ó±ßµÄ×ó±ßÊÇÁ¬ĞøµÄºìÉ«
-					//ĞŞ¸ÄÑÕÉ«
+					//uncleèŠ‚ç‚¹ä¸å­˜åœ¨æˆ–è€…uncleèŠ‚ç‚¹å­˜åœ¨ï¼Œä½†æ˜¯é¢œè‰²ä¸ºé»‘è‰²
+					RotateR(gfather);//å³æ—‹----å·¦è¾¹çš„å·¦è¾¹æ˜¯è¿ç»­çš„çº¢è‰²
+					//ä¿®æ”¹é¢œè‰²
 					parent->_color = BLACK;
 					gfather->_color = RED;
-					break;//µ÷Õû½áÊø
+					break;//è°ƒæ•´ç»“æŸ
 				}
 
 			}
 			else
 			{
 				Node* uncle = gfather->_left;
-				//uncle½Úµã´æÔÚ£¬²¢ÇÒÑÕÉ«ÊÇºìÉ«µÄ
+				//uncleèŠ‚ç‚¹å­˜åœ¨ï¼Œå¹¶ä¸”é¢œè‰²æ˜¯çº¢è‰²çš„
 				if (uncle && uncle->_color == RED)
 				{
 					parent->_color = uncle->_color = BLACK;
 					gfather->_color = RED;
-					//¼ÌĞø¸üĞÂ
+					//ç»§ç»­æ›´æ–°
 					cur = gfather;
 				}
 				else
 				{
 					//cout << "Rotate---------" << endl;
-					//ÅĞ¶ÏÊÇ·ñÊÇË«ĞıµÄ³¡¾°
+					//åˆ¤æ–­æ˜¯å¦æ˜¯åŒæ—‹çš„åœºæ™¯
 					if (parent->_left == cur)
 					{
-						RotateR(parent);//ÓÒĞı
-						swap(parent, cur);//½»»»parentºÍcurµÄÖ¸Ïò£¬ÍË»¯Îª×óĞıµÄ³¡¾°
+						RotateR(parent);//å³æ—‹
+						swap(parent, cur);//äº¤æ¢parentå’Œcurçš„æŒ‡å‘ï¼Œé€€åŒ–ä¸ºå·¦æ—‹çš„åœºæ™¯
 					}
-					//uncle½Úµã²»´æÔÚ»òÕßuncle½Úµã´æÔÚ£¬µ«ÊÇÑÕÉ«ÎªºÚÉ«
-					RotateL(gfather);//×óĞı----ÓÒ±ßµÄÓÒ±ßÊÇÁ¬ĞøµÄºìÉ«
-					//ĞŞ¸ÄÑÕÉ«
+					//uncleèŠ‚ç‚¹ä¸å­˜åœ¨æˆ–è€…uncleèŠ‚ç‚¹å­˜åœ¨ï¼Œä½†æ˜¯é¢œè‰²ä¸ºé»‘è‰²
+					RotateL(gfather);//å·¦æ—‹----å³è¾¹çš„å³è¾¹æ˜¯è¿ç»­çš„çº¢è‰²
+					//ä¿®æ”¹é¢œè‰²
 					parent->_color = BLACK;
 					gfather->_color = RED;
-					break;//µ÷Õû½áÊø
+					break;//è°ƒæ•´ç»“æŸ
 				}
 			}
 		}
 
-		//3.½«¸ù½ÚµãÑÕÉ«ÖÃÎªºÚÉ«
-		_header->_parent->_color = BLACK;
-		//4.¸üĞÂ_headerµÄ×óÓÒÖ¸Ïò
+		//3.å°†æ ¹èŠ‚ç‚¹é¢œè‰²ç½®ä¸ºé»‘è‰²
+		if(_header->_parent->_color == RED)
+		{
+			_header->_parent->_color = BLACK;
+		}
+		//4.æ›´æ–°_headerçš„å·¦å³æŒ‡å‘
 		_header->_left = leftMost();
 		_header->_right = rightMost();
 
@@ -264,15 +269,15 @@ public:
 	}
 
 	/*
-		ºìºÚÊ÷µÄÈı¸öĞÔÖÊ£º
-		1.¸ùÊÇºÚÉ«£»
-		2.Ã¿ÌõÂ·¾¶ºÚÉ«¸öÊıÏàÍ¬£»
-		3.ºìÉ«²»ÄÜÁ¬Ğø£»
+		çº¢é»‘æ ‘çš„ä¸‰ä¸ªæ€§è´¨ï¼š
+		1.æ ¹èŠ‚ç‚¹çš„é¢œè‰²æ˜¯é»‘è‰²ï¼›
+		2.æ¯æ¡è·¯å¾„é»‘è‰²èŠ‚ç‚¹ä¸ªæ•°ä¸ªæ•°ç›¸åŒï¼›
+		3.çº¢è‰²ä¸èƒ½è¿ç»­ï¼›
 	*/
 	bool isValidTree()
 	{
 		if (_header->_parent == nullptr)
-			return true;//¿ÕÊ÷Ò²Ä¬ÈÏÎªºìºÚÊ÷
+			return true;//ç©ºæ ‘ä¹Ÿé»˜è®¤ä¸ºçº¢é»‘æ ‘
 
 		Node* root = _header->_parent;
 		if (root->_color == RED)
@@ -287,17 +292,17 @@ public:
 			cur = cur->_left;
 		}
 
-		//±éÀúÃ¿Ò»ÌõÂ·¾¶µÄºÚÉ«½ÚµãÊı,²¢¼ì²éÊÇ·ñÓĞºìÉ«½ÚµãÁ¬ĞøµÄÇé¿ö
+		//éå†æ¯ä¸€æ¡è·¯å¾„çš„é»‘è‰²èŠ‚ç‚¹æ•°,å¹¶æ£€æŸ¥æ˜¯å¦æœ‰çº¢è‰²èŠ‚ç‚¹è¿ç»­çš„æƒ…å†µ
 		int curCount = 0;
 		return isBalance(root, bCount, curCount);
 	}
 
 	bool isBalance(Node* root,int& bCount,int curCount)
 	{
-		//µ±½Úµã×ßµ½¿Õ´¦£¬ËµÃ÷Ò»ÌõÂ·¾¶±éÀú½áÊø
+		//å½“èŠ‚ç‚¹èµ°åˆ°ç©ºå¤„ï¼Œè¯´æ˜ä¸€æ¡è·¯å¾„éå†ç»“æŸ
 		if (root == nullptr)
 		{
-			//ÅĞ¶ÏºÚÉ«½Úµã¸öÊıÊÇ·ñÏàÍ¬
+			//åˆ¤æ–­é»‘è‰²èŠ‚ç‚¹ä¸ªæ•°æ˜¯å¦ç›¸åŒ
 			if (bCount == curCount)
 				return true;
 			else
@@ -305,9 +310,9 @@ public:
 		}
 
 		if (root->_color == BLACK)
-			curCount++;//ÀÛ¼ÓºÚÉ«½Úµã¸öÊı
+			curCount++;//ç´¯åŠ é»‘è‰²èŠ‚ç‚¹ä¸ªæ•°
 
-		//´æÔÚºìÉ«Á¬Ğø£¬·µ»Øfalse
+		//å­˜åœ¨çº¢è‰²è¿ç»­ï¼Œè¿”å›false
 		if (root->_parent && root->_color == RED
 			&& root->_parent->_color == RED)
 		{
